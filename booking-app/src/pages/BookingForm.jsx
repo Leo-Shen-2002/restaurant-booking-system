@@ -35,8 +35,9 @@ const handleSubmit = async () => {
     };
 
     console.log("Sending booking:", bookingData);
-    await createBooking("TheHungryUnicorn", bookingData);
+    const response = await createBooking("TheHungryUnicorn", bookingData);
     setStatus("success");
+    console.log("Booking response:", response.data);
   } catch (err) {
     console.error("Booking error:", err.response?.data || err.message);
     setStatus("error");

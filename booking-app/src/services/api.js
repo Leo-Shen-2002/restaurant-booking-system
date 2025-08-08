@@ -49,3 +49,9 @@ export const createBooking = async (restaurantName, data) => {
     }
   });
 };
+
+//Get Booking
+export const getBookingByReference = async (restaurantName, bookingRef) => {
+  const res = await API.get(`/Restaurant/${restaurantName}/Booking/${bookingRef}`);
+  return res.data;
+};
