@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { getBookingByReference } from "../services/api";
+import { cancelBooking } from "../services/api";
 
 export default function BookingLookup() {
   const [ref, setRef] = useState("");
   const [booking, setBooking] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
 
   const handleSearch = async () => {
     setBooking(null);
@@ -20,6 +22,19 @@ export default function BookingLookup() {
       setError("Booking not found or invalid reference.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleCancel = async () => {
+    if (!window.confirm("Are you sure you want to cancel this booking?")) return;
+
+    try {
+        await cancelBooking("TheHungryUnicorn", ref);
+        setCancelled(true);
+        setBooking({ ...booking, status: "Cancelled" }); // Update local UI
+    } catch (err) {
+        console.error("Cancel error:", err.response?.data || err.message);
+        alert("Failed to cancel booking. Please try again.");
     }
   };
 
@@ -54,6 +69,19 @@ export default function BookingLookup() {
           <p><strong>Special Requests:</strong> {booking.special_requests || "None"}</p>
           <p><strong>Status:</strong> {booking.status || "Confirmed"}</p>
         </div>
+      )}
+
+      {booking && !cancelled && booking.status !== "Cancelled" && (
+        <button
+            onClick={handleCancel}
+            className="mt-4 bg-red-600 text-white px-4 py-2 rounded"
+        >
+            Cancel Booking
+        </button>
+        )}
+
+        {cancelled && (
+        <p className="mt-4 text-green-600">Booking successfully cancelled.</p>
       )}
     </div>
   );

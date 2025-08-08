@@ -41,7 +41,7 @@ export const createBooking = async (restaurantName, data) => {
   body.append("Customer[Email]", data.Email);
   body.append("Customer[Mobile]", data.Mobile);
 
-  console.log("Posting data:", Object.fromEntries(body)); // ✅ Inspect before sending
+  console.log("Posting data:", Object.fromEntries(body)); 
 
   return API.post(`/Restaurant/${restaurantName}/BookingWithStripeToken`, body, {
     headers: {
@@ -54,4 +54,21 @@ export const createBooking = async (restaurantName, data) => {
 export const getBookingByReference = async (restaurantName, bookingRef) => {
   const res = await API.get(`/Restaurant/${restaurantName}/Booking/${bookingRef}`);
   return res.data;
+};
+
+export const cancelBooking = async (restaurantName, bookingRef) => {
+  const body = new URLSearchParams();
+  body.append("micrositeName", restaurantName);
+  body.append("bookingReference", bookingRef);
+  body.append("cancellationReasonId", "1"); // Example reason ID
+
+  return API.post(
+    `/Restaurant/${restaurantName}/Booking/${bookingRef}/Cancel`,
+    body,
+    {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    }
+  );
 };
