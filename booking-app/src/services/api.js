@@ -56,6 +56,7 @@ export const getBookingByReference = async (restaurantName, bookingRef) => {
   return res.data;
 };
 
+//Cancel Booking 
 export const cancelBooking = async (restaurantName, bookingRef) => {
   const body = new URLSearchParams();
   body.append("micrositeName", restaurantName);
@@ -64,6 +65,25 @@ export const cancelBooking = async (restaurantName, bookingRef) => {
 
   return API.post(
     `/Restaurant/${restaurantName}/Booking/${bookingRef}/Cancel`,
+    body,
+    {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+    }
+  );
+};
+
+//Update Booking
+export const updateBooking = async (restaurantName, bookingRef, data) => {
+  const body = new URLSearchParams();
+  body.append("VisitDate", data.VisitDate);
+  body.append("VisitTime", data.VisitTime);
+  body.append("PartySize", data.PartySize);
+  body.append("SpecialRequests", data.SpecialRequests || "");
+
+  return API.patch(
+    `/Restaurant/${restaurantName}/Booking/${bookingRef}`,
     body,
     {
       headers: {

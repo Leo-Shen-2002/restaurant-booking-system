@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { getBookingByReference } from "../services/api";
 import { cancelBooking } from "../services/api";
+import { Link } from "react-router-dom";
 
 export default function BookingLookup() {
   const [ref, setRef] = useState("");
@@ -68,6 +69,12 @@ export default function BookingLookup() {
           <p><strong>Party Size:</strong> {booking.party_size}</p>
           <p><strong>Special Requests:</strong> {booking.special_requests || "None"}</p>
           <p><strong>Status:</strong> {booking.status || "Confirmed"}</p>
+          <Link
+            to={`/booking/edit/${ref}`}
+            className="mt-4 inline-block text-blue-600 underline"
+            >
+            Edit this booking
+          </Link>
         </div>
       )}
 
