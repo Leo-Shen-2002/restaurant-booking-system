@@ -18,6 +18,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import Restaurant, Customer, Booking, CancellationReason
+from app.routers.deps import get_current_user
 
 router = APIRouter(prefix="/api/ConsumerApi/v1/Restaurant", tags=["booking"])
 
@@ -28,6 +29,10 @@ MOCK_BEARER_TOKEN = (
     "MDUsImlzcyI6IlNlbGYiLCJhdWQiOiJodHRwczovL2FwaS5yZXNkaWFyeS5jb20ifQ.g3yLsufdk8Fn"
     "2094SB3J3XW-KdBc0DY9a2Jiu_56ud8"
 )
+
+@router.get("/booking/me")
+def me(current = Depends(get_current_user)):
+    return current
 
 
 def verify_token(authorization: str = Header(...)) -> str:

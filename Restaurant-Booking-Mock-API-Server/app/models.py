@@ -45,6 +45,8 @@ class Restaurant(Base):
     name = Column(String, unique=True, index=True, nullable=False)
     microsite_name = Column(String, unique=True, index=True, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow)
+    email = Column(String, unique=True, index=True)
+    hashed_password = Column(String, nullable=False)
 
     # Relationships
     bookings = relationship("Booking", back_populates="restaurant")
@@ -80,7 +82,8 @@ class Customer(Base):
     mobile = Column(String)
     phone_country_code = Column(String)
     phone = Column(String)
-    email = Column(String, index=True)
+    email = Column(String, index=True,unique=True)
+    hashed_password = Column(String, nullable=False)
     receive_email_marketing = Column(Boolean, default=False)
     receive_sms_marketing = Column(Boolean, default=False)
     group_email_marketing_opt_in_text = Column(Text)

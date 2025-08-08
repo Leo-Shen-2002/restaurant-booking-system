@@ -15,6 +15,7 @@ from app.database import engine
 from app.models import Base
 import app.init_db as init_db
 from fastapi.middleware.cors import CORSMiddleware
+from app.routers import auth 
 
 # Create database tables on startup
 Base.metadata.create_all(bind=engine)
@@ -41,6 +42,9 @@ app.add_middleware(
 # Include API routers
 app.include_router(availability.router)
 app.include_router(booking.router)
+app.include_router(availability.router)
+app.include_router(booking.router)
+app.include_router(auth.router)
 
 
 @app.on_event("startup")

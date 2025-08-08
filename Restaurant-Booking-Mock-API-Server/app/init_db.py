@@ -13,6 +13,8 @@ from datetime import time, datetime, timedelta
 
 from app.database import engine, SessionLocal
 from app.models import Base, Restaurant, AvailabilitySlot, CancellationReason
+from app.auth import hash_password
+from app.models import Customer
 
 
 def create_tables() -> None:
@@ -51,11 +53,24 @@ def init_sample_data() -> None:
         # Create sample restaurant
         restaurant = Restaurant(
             name="TheHungryUnicorn",
-            microsite_name="TheHungryUnicorn"
+            microsite_name="TheHungryUnicorn",
+            email = "owner@hungryunicorn.com",
+            hashed_password = hash_password("ownerpass"),
         )
+        # Create sample restaurant user
+        demo_customer = Customer(
+            email="john@example.com",
+            first_name="John",
+            surname="Smith",
+            hashed_password=hash_password("secret123"),
+        )
+        
+        db.add(demo_customer)
         db.add(restaurant)
         db.commit()
         db.refresh(restaurant)
+
+
 
         # Create sample availability slots for the next 30 days
         sample_times = [
