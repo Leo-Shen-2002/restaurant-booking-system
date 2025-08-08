@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { searchAvailability } from "../services/api";
+import { Link } from "react-router-dom";
 
 export default function Availability() {
   const [searchParams] = useSearchParams();
@@ -43,7 +44,12 @@ export default function Availability() {
               key={index}
               className="border rounded p-2 flex justify-between items-center"
             >
-              <span>{slot.time.slice(0, 5)}</span>
+              <Link
+                to={`/booking/new?date=${date}&time=${slot.time}`}
+                className="text-blue-500 hover:underline"
+              >
+                {slot.time.slice(0, 5)}
+              </Link>
               <span className="text-sm text-gray-600">
                 Max: {slot.max_party_size} / Booked: {slot.current_bookings}
               </span>

@@ -25,3 +25,27 @@ export const searchAvailability = async (restaurantName, date, partySize) => {
 
   return res.data.available_slots; 
 };
+
+// New Booking
+export const createBooking = async (restaurantName, data) => {
+  const body = new URLSearchParams();
+
+  body.append("VisitDate", data.VisitDate);
+  body.append("VisitTime", data.VisitTime);
+  body.append("PartySize", data.PartySize);
+  body.append("ChannelCode", "ONLINE");
+  body.append("SpecialRequests", data.SpecialRequests);
+
+  body.append("Customer[FirstName]", data.FirstName);
+  body.append("Customer[Surname]", data.Surname);
+  body.append("Customer[Email]", data.Email);
+  body.append("Customer[Mobile]", data.Mobile);
+
+  console.log("Posting data:", Object.fromEntries(body)); // ✅ Inspect before sending
+
+  return API.post(`/Restaurant/${restaurantName}/BookingWithStripeToken`, body, {
+    headers: {
+      "Content-Type": "application/x-www-form-urlencoded",
+    }
+  });
+};
