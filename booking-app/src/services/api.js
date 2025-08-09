@@ -1,13 +1,40 @@
 import axios from "axios";
 
-const AUTH_TOKEN = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6ImFwcGVsbGErYXBpQHJlc2RpYXJ5LmNvbSIsIm5iZiI6MTc1NDQzMDgwNSwiZXhwIjoxNzU0NTE3MjA1LCJpYXQiOjE3NTQ0MzA4MDUsImlzcyI6IlNlbGYiLCJhdWQiOiJodHRwczovL2FwaS5yZXNkaWFyeS5jb20ifQ.g3yLsufdk8Fn2094SB3J3XW-KdBc0DY9a2Jiu_56ud8";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8547/api/ConsumerApi/v1";
 
-const API = axios.create({
-  baseURL: "http://localhost:8547/api/ConsumerApi/v1", 
-  headers: {
-    Authorization: `Bearer ${AUTH_TOKEN}`
-  }
+// We keep auth base (for /auth) on same origin as API_BASE’s host
+const AUTH_BASE = (new URL(API_BASE)).origin; // e.g. http://localhost:8547
+
+export const API = axios.create({
+  baseURL: API_BASE,
 });
+
+// Attach Authorization header if token present
+API.interceptors.request.use((config) => {
+  const token = localStorage.getItem("rb_token");
+  if (token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+});
+
+// ---------- AUTH ENDPOINTS ----------
+export const login = async ({ email, password, user_type }) => {
+  const res = await axios.post(`${AUTH_BASE}/auth/login`, { email, password, user_type });
+  // returns: { access_token, token_type, user_type }
+  return res.data;
+};
+
+export const register = async ({ email, password, user_type, first_name, surname, name }) => {
+  const payload = { email, password, user_type };
+  if (user_type === "customer") {
+    payload.first_name = first_name;
+    payload.surname = surname;
+  } else if (user_type === "restaurant") {
+    payload.name = name;
+  }
+  const res = await axios.post(`${AUTH_BASE}/auth/register`, payload);
+  return res.data;
+};
+
 
 
 // Availability search
