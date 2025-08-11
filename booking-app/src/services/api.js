@@ -124,11 +124,11 @@ export const getBookingByReference = async (restaurantName, bookingRef) => {
 };
 
 //Cancel Booking 
-export const cancelBooking = async (restaurantName, bookingRef) => {
+export const cancelBooking = async (restaurantName, bookingRef,  cancellationReasonId = 1) => {
   const body = new URLSearchParams();
   body.append("micrositeName", restaurantName);
   body.append("bookingReference", bookingRef);
-  body.append("cancellationReasonId", "1"); // Example reason ID
+  body.append("cancellationReasonId", String(cancellationReasonId));
 
   return API.post(
     `/Restaurant/${restaurantName}/Booking/${bookingRef}/Cancel`,
