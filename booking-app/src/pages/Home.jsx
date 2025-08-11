@@ -67,8 +67,8 @@ export default function Home() {
             Book your table in seconds
           </h1>
           <p className="text-slate-600 mt-3">
-            Seasonal plates, cozy vibes, and friendly faces. Reserve a spot for lunch or dinner—
-            same-day bookings welcome.
+            Seasonal plates, cozy vibes, and friendly faces. Reserve a spot for lunch or dinner.
+            Same-day bookings welcome.
           </p>
 
           {/* Search card */}
