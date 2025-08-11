@@ -120,10 +120,12 @@ export default function Availability() {
           <Link to="/" className="font-semibold hover:underline">
             ← The Hungry Unicorn
           </Link>
+          <h2 className="mt-6 font-semibold" aria-label="Available time slots">
+            Available time slots
+          </h2>
           <UserMenu />
         </div>
       </header>
-
       <main className="max-w-5xl mx-auto px-4 py-6 md:py-10">
         {/* Controls */}
         <div className="bg-white rounded-2xl shadow-sm border p-4 md:p-5">

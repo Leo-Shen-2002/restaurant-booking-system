@@ -76,10 +76,10 @@ export default function Home() {
             <h2 className="font-semibold mb-3">Find a table</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div>
-                <label className="text-sm text-slate-600">Date</label>
+                <label htmlFor="search-date" className="text-sm text-slate-600">Date</label>
                 <input
+                  id="search-date"
                   type="date"
-                  min={todayStr}
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
                   className="w-full mt-1 rounded-lg border p-2"
@@ -87,11 +87,12 @@ export default function Home() {
                 {errors.date && <p className="text-xs text-red-600 mt-1">{errors.date}</p>}
               </div>
               <div>
-                <label className="text-sm text-slate-600">Party size</label>
+                <label htmlFor="search-party" className="text-sm text-slate-600">Party size</label>
                 <select
-                  className="w-full mt-1 rounded-lg border p-2"
+                  id="search-party"
                   value={partySize}
                   onChange={(e) => setPartySize(Number(e.target.value))}
+                  className="w-full mt-1 rounded-lg border p-2"
                 >
                   {Array.from({ length: MAX_PARTY_SIZE }, (_, i) => i + 1).map(n => (
                     <option key={n} value={n}>{n}</option>

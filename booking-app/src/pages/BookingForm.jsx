@@ -161,17 +161,29 @@ export default function BookingForm() {
                 <Field label="Email" name="email" type="email" value={form.email} onChange={onChange} error={errors.email} />
                 <Field label="Mobile" name="mobile" value={form.mobile} onChange={onChange} error={errors.mobile} />
                 <div>
-                  <label className="text-sm text-slate-600">Party size</label>
-                  <select name="partySize" value={form.partySize} onChange={onChange} className="mt-1 w-full rounded-lg border p-2">
-                    {Array.from({ length: MAX_PARTY_SIZE }, (_, i) => i + 1).map(n => <option key={n} value={n}>{n}</option>)}
+                  <label htmlFor="partySize" className="text-sm text-slate-600">Party size</label>
+                  <select
+                    id="partySize"
+                    name="partySize"
+                    value={form.partySize}
+                    onChange={onChange}
+                    className="mt-1 w-full rounded-lg border p-2"
+                  >
+                    {Array.from({ length: MAX_PARTY_SIZE }, (_, i) => i + 1).map(n => (
+                      <option key={n} value={n}>{n}</option>
+                    ))}
                   </select>
                   {errors.partySize && <p className="text-xs text-red-600 mt-1">{errors.partySize}</p>}
                 </div>
                 <div className="md:col-span-2">
-                  <label className="text-sm text-slate-600">Special requests</label>
+                  <label htmlFor="specialRequest" className="text-sm text-slate-600">Special requests</label>
                   <textarea
-                    name="specialRequest" rows={3} placeholder="Allergies, accessibility needs, occasion…"
-                    value={form.specialRequest} onChange={onChange}
+                    id="specialRequest"
+                    name="specialRequest"
+                    rows={3}
+                    placeholder="Allergies, accessibility needs, occasion…"
+                    value={form.specialRequest}
+                    onChange={onChange}
                     className="mt-1 w-full rounded-lg border p-2"
                   />
                 </div>
@@ -302,11 +314,19 @@ export default function BookingForm() {
   );
 }
 
-function Field({ label, error, ...rest }) {
+function Field({ label, name, id, error, ...rest }) {
+  const controlId = id || `bf_${name}`;
   return (
     <div>
-      <label className="text-sm text-slate-600">{label}</label>
-      <input {...rest} className="mt-1 w-full rounded-lg border p-2" />
+      <label htmlFor={controlId} className="text-sm text-slate-600">
+        {label}
+      </label>
+      <input
+        id={controlId}
+        name={name}
+        {...rest}
+        className="mt-1 w-full rounded-lg border p-2"
+      />
       {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
     </div>
   );
