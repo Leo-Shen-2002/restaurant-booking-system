@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import AuthContext from "./auth-context";
-import { login as apiLogin, register as apiRegister } from "../services/api";
+import { login as apiLogin, register as apiRegister, authLogout } from "../services/api";
 
 export default function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("rb_token") || "");
@@ -27,7 +27,10 @@ export default function AuthProvider({ children }) {
     return data;
   };
 
-  const logout = () => { setToken(""); setUserType(""); setEmail(""); };
+  const logout = async () => {
+    try { await authLogout(); } catch { /* ignore */ }
+    setToken(""); setUserType(""); setEmail("");
+  };
 
   const value = useMemo(() => ({
     token, userType, email, login, register, logout, isAuthed: Boolean(token),

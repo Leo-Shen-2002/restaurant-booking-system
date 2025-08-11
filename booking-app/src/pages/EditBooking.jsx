@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getBookingByReference, updateBooking, searchAvailability } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
+import UserMenu from "../components/UserMenu";
 
 const MAX_PARTY_SIZE = 8;
 
@@ -174,6 +175,7 @@ export default function EditBooking() {
       <header className="border-b bg-white">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/" className="font-semibold hover:underline">← The Hungry Unicorn</Link>
+          <UserMenu />
           <Link to={`/booking/lookup?ref=${ref}`} className="text-blue-600 hover:underline text-sm">Back to booking</Link>
         </div>
       </header>

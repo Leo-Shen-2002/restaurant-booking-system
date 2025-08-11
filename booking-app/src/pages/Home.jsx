@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import UserMenu from "../components/UserMenu";
 
 const OPENING_HOURS = {
   Mon: "12:00–14:00, 19:00–21:00",
@@ -54,8 +55,7 @@ export default function Home() {
             <span className="font-semibold">The Hungry Unicorn</span>
           </div>
           <nav className="flex items-center gap-4 text-sm">
-            <Link to="/auth" className="text-blue-600 hover:underline">Login / Register</Link>
-            <Link to="/booking/lookup" className="text-blue-600 hover:underline">View a booking</Link>
+            <UserMenu />
           </nav>
         </div>
       </header>
@@ -154,9 +154,6 @@ export default function Home() {
             >
               View cancellation policy
             </button>
-            <Link to="/auth" className="text-sm text-slate-600 hover:underline">
-              Manage your account →
-            </Link>
           </div>
         </aside>
       </section>
@@ -171,7 +168,7 @@ export default function Home() {
             </div>
             <div className="mt-3 text-sm text-slate-700 space-y-2">
               <p>• Free cancellation up to 2 hours before your booking.</p>
-              <p>• Within 2 hours, please call us—availability-dependent.</p>
+              <p>• Within 2 hours, please call us as availability is dependent.</p>
               <p>• No-shows may affect future booking priority.</p>
             </div>
             <div className="mt-4 flex justify-end gap-2">

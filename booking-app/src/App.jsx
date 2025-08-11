@@ -6,6 +6,7 @@ import BookingLookup from "./pages/BookingLookup";
 import EditBooking from "./pages/EditBooking";
 import AuthPage from "./pages/Auth";
 import RequireAuth from "./components/RequireAuth";
+import Account from "./pages/Account";
 
 function App() {
   return (
@@ -15,13 +16,12 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/availability" element={<Availability />} />
         <Route path="/booking/new" element={<BookingForm />} />
-        <Route path="/booking/lookup" element={<BookingLookup />} />
-        <Route path="/booking/edit/:ref" element={<EditBooking />} />
         <Route path="/auth" element={<AuthPage />} />
+        <Route path="/account"element={<RequireAuth> <Account /></RequireAuth>}/>
 
-        {/* Example protected route groups */}
         <Route element={<RequireAuth allow={["customer"]} />}>
-          {/* add customer-only pages here */}
+          <Route path="/booking/lookup" element={<BookingLookup />} />
+          <Route path="/booking/edit/:ref" element={<EditBooking />} />
         </Route>
 
         <Route element={<RequireAuth allow={["restaurant"]} />}>

@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { getBookingByReference, cancelBooking } from "../services/api";
+import UserMenu from "../components/UserMenu";
 
 const CANCELLATION_REASONS = [
   { id: 1, label: "Customer Request" },
@@ -111,7 +112,7 @@ export default function BookingLookup() {
       <header className="border-b bg-white">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/" className="font-semibold hover:underline">← The Hungry Unicorn</Link>
-          <Link to="/availability" className="text-blue-600 hover:underline text-sm">Find a table</Link>
+          <UserMenu />
         </div>
       </header>
 

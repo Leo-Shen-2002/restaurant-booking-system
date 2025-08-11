@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { createBooking, searchAvailability  } from "../services/api";
 import { useAuth } from "../hooks/useAuth";
+import UserMenu from "../components/UserMenu";
 
 const MAX_PARTY_SIZE = 8;
 
@@ -129,7 +130,7 @@ export default function BookingForm() {
       <header className="border-b bg-white">
         <div className="max-w-3xl mx-auto px-4 py-3 flex items-center justify-between">
           <Link to="/" className="font-semibold hover:underline">← The Hungry Unicorn</Link>
-          <Link to="/booking/lookup" className="text-blue-600 hover:underline text-sm">View a booking</Link>
+          <UserMenu />
         </div>
       </header>
 

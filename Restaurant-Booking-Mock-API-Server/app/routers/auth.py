@@ -4,6 +4,7 @@ from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse
 from app.models import Customer, Restaurant
 from app.database import get_db
 from app.auth import hash_password, verify_password, create_access_token, create_refresh_token, decode_token
+from app.routers.deps import get_current_user
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
@@ -104,3 +105,51 @@ def refresh(response: Response, rb_refresh: str | None = Cookie(default=None)):
     )
 
     return TokenResponse(access_token=new_access, user_type=user_type)
+
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie(
+        key="rb_refresh",
+        samesite="none",
+        secure=True,     # match how you set it
+        httponly=True,
+    )
+    return {"ok": True}
+
+@router.get("/me")
+def me(current=Depends(get_current_user), db: Session = Depends(get_db)):
+    """
+    Return the authenticated user's profile based on the access token.
+    Expects `Authorization: Bearer <access_token>` header.
+    """
+    # your get_current_user returns the decoded payload or raises
+    email = current.get("sub")
+    user_type = current.get("user_type") or current.get("type")
+    if not email or not user_type:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+
+    if user_type == "customer":
+        user = db.query(Customer).filter(Customer.email == email).first()
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return {
+            "email": user.email,
+            "user_type": "customer",
+            "first_name": user.first_name,
+            "surname": user.surname,
+            "created_at": user.created_at,
+        }
+
+    elif user_type == "restaurant":
+        rest = db.query(Restaurant).filter(Restaurant.email == email).first()
+        if not rest:
+            raise HTTPException(status_code=404, detail="User not found")
+        return {
+            "email": rest.email,
+            "user_type": "restaurant",
+            "name": rest.name,
+            "microsite_name": rest.microsite_name,
+            "created_at": rest.created_at,
+        }
+
+    raise HTTPException(status_code=401, detail="Unsupported user type")

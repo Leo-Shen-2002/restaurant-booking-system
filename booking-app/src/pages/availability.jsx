@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useSearchParams, Link } from "react-router-dom";
 import { searchAvailability } from "../services/api";
+import UserMenu from "../components/UserMenu";
 
 const MAX_PARTY_SIZE = 8;
 
@@ -119,9 +120,7 @@ export default function Availability() {
           <Link to="/" className="font-semibold hover:underline">
             ← The Hungry Unicorn
           </Link>
-          <Link to="/auth" className="text-blue-600 hover:underline text-sm">
-            Login / Register
-          </Link>
+          <UserMenu />
         </div>
       </header>
 
