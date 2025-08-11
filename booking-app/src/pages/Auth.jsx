@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {  useSearchParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 
 export default function AuthPage() {
   const { login, register } = useAuth();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const returnTo = searchParams.get("returnTo");
 
   const [mode, setMode] = useState("login"); // 'login' | 'register'
   const [userType, setUserType] = useState("customer"); // 'customer' | 'restaurant'
@@ -42,7 +44,7 @@ export default function AuthPage() {
         });
       }
       // Redirect based on user type
-      navigate(userType === "customer" ? "/" : "/restaurant/dashboard");
+      navigate(returnTo || (userType === "customer" ? "/booking/lookup" : "/restaurant/dashboard"), { replace: true });
     } catch (err) {
       console.error(err);
       const msg = err?.response?.data?.detail || "Authentication failed";
