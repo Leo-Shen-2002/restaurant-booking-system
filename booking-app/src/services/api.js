@@ -1,12 +1,11 @@
 import axios from "axios";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:8547/api/ConsumerApi/v1";
-
-// We keep auth base (for /auth) on same origin as API_BASE’s host
-const AUTH_BASE = (new URL(API_BASE)).origin; // e.g. http://localhost:8547
+const AUTH_BASE = (new URL(API_BASE)).origin;
 
 export const API = axios.create({
   baseURL: API_BASE,
+  withCredentials: true,
 });
 
 // Attach Authorization header if token present
@@ -16,9 +15,50 @@ API.interceptors.request.use((config) => {
   return config;
 });
 
+// 401 refresh logic
+let isRefreshing = false;
+let pending = [];
+
+API.interceptors.response.use(
+  (res) => res,
+  async (error) => {
+    const original = error.config;
+    if (error.response?.status === 401 && !original._retry) {
+      if (isRefreshing) {
+        // queue while a refresh is in-flight
+        return new Promise((resolve, reject) => pending.push({ resolve, reject }));
+      }
+      original._retry = true;
+      isRefreshing = true;
+      try {
+        const r = await axios.post(`${AUTH_BASE}/auth/refresh`, null, { withCredentials: true });
+        const newAccess = r.data?.access_token;
+        if (newAccess) {
+          localStorage.setItem("rb_token", newAccess);
+          // update header and retry original
+          original.headers.Authorization = `Bearer ${newAccess}`;
+          // flush queued
+          pending.forEach(p => p.resolve(API(original)));
+          pending = [];
+          return API(original);
+        }
+      } catch (e) {
+        pending.forEach(p => p.reject(e));
+        pending = [];
+        localStorage.removeItem("rb_token");
+        localStorage.removeItem("rb_user_type");
+        localStorage.removeItem("rb_email");
+      } finally {
+        isRefreshing = false;
+      }
+    }
+    return Promise.reject(error);
+  }
+);
+
 // ---------- AUTH ENDPOINTS ----------
 export const login = async ({ email, password, user_type }) => {
-  const res = await axios.post(`${AUTH_BASE}/auth/login`, { email, password, user_type });
+  const res = await axios.post(`${AUTH_BASE}/auth/login`, { email, password, user_type }, { withCredentials: true });
   // returns: { access_token, token_type, user_type }
   return res.data;
 };
@@ -31,7 +71,7 @@ export const register = async ({ email, password, user_type, first_name, surname
   } else if (user_type === "restaurant") {
     payload.name = name;
   }
-  const res = await axios.post(`${AUTH_BASE}/auth/register`, payload);
+  const res = await axios.post(`${AUTH_BASE}/auth/register`, payload, { withCredentials: true });
   return res.data;
 };
 

@@ -42,7 +42,7 @@ export default function AuthPage() {
         });
       }
       // Redirect based on user type
-      navigate(userType === "customer" ? "/availability" : "/restaurant/dashboard");
+      navigate(userType === "customer" ? "/" : "/restaurant/dashboard");
     } catch (err) {
       console.error(err);
       const msg = err?.response?.data?.detail || "Authentication failed";

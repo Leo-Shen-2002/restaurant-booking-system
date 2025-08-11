@@ -1,14 +1,14 @@
-from fastapi import APIRouter, HTTPException, Depends
+from fastapi import APIRouter, HTTPException, Depends, Response, Cookie
 from sqlalchemy.orm import Session
 from app.schemas.auth import LoginRequest, RegisterRequest, TokenResponse
 from app.models import Customer, Restaurant
 from app.database import get_db
-from app.auth import hash_password, verify_password, create_access_token
+from app.auth import hash_password, verify_password, create_access_token, create_refresh_token, decode_token
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 @router.post("/register", response_model=TokenResponse)
-def register(data: RegisterRequest, db: Session = Depends(get_db)):
+def register(data: RegisterRequest, response: Response, db: Session = Depends(get_db)):
     if data.user_type == "customer":
         if db.query(Customer).filter(Customer.email == data.email).first():
             raise HTTPException(status_code=400, detail="Customer already exists")
@@ -23,8 +23,15 @@ def register(data: RegisterRequest, db: Session = Depends(get_db)):
         )
         db.add(user)
         db.commit()
-        token = create_access_token({"sub": user.email, "type": "customer"})
-        return TokenResponse(access_token=token, user_type="customer")
+        claims = {"sub": user.email, "type": "customer"}
+        
+        access = create_access_token(sub=user.email, user_type="customer")
+        refresh = create_refresh_token(sub=user.email, user_type="customer")
+        response.set_cookie(
+            key="rb_refresh", value=refresh,
+            httponly=True, samesite="lax", secure=False  # secure=True in prod
+        )
+        return TokenResponse(access_token=access, user_type="customer")
 
     elif data.user_type == "restaurant":
         if not data.name:
@@ -42,13 +49,20 @@ def register(data: RegisterRequest, db: Session = Depends(get_db)):
         )
         db.add(rest)
         db.commit()
-        token = create_access_token({"sub": rest.email, "type": "restaurant"})
-        return TokenResponse(access_token=token, user_type="restaurant")
+
+        access = create_access_token(sub=rest.email, user_type="restaurant")
+        refresh = create_refresh_token(sub=rest.email, user_type="restaurant")
+        response.set_cookie(
+            key="rb_refresh", value=refresh,
+            httponly=True, samesite="lax", secure=False
+        )
+        return TokenResponse(access_token=access, user_type="restaurant")
+
 
     raise HTTPException(status_code=400, detail="Invalid user_type")
 
 @router.post("/login", response_model=TokenResponse)
-def login(data: LoginRequest, db: Session = Depends(get_db)):
+def login(data: LoginRequest, response: Response, db: Session = Depends(get_db)):
     if data.user_type == "customer":
         user = db.query(Customer).filter(Customer.email == data.email).first()
     else:
@@ -57,5 +71,36 @@ def login(data: LoginRequest, db: Session = Depends(get_db)):
     if not user or not verify_password(data.password, user.hashed_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    token = create_access_token({"sub": user.email, "type": data.user_type})
-    return TokenResponse(access_token=token, user_type=data.user_type)
+    access = create_access_token(sub=user.email, user_type=data.user_type)
+    refresh = create_refresh_token(sub=user.email, user_type=data.user_type)
+    response.set_cookie(
+        key="rb_refresh", value=refresh,
+        httponly=True, samesite="lax", secure=False
+    )
+    return TokenResponse(access_token=access, user_type=data.user_type)
+
+@router.post("/refresh", response_model=TokenResponse)
+def refresh(response: Response, rb_refresh: str | None = Cookie(default=None)):
+    if not rb_refresh:
+        raise HTTPException(status_code=401, detail="Missing refresh token")
+
+    payload = decode_token(rb_refresh)
+    if not payload or payload.get("token_type") != "refresh":
+        raise HTTPException(status_code=401, detail="Invalid refresh token")
+
+    sub = payload.get("sub")
+    user_type = payload.get("user_type")
+    if not sub or not user_type:
+        raise HTTPException(status_code=401, detail="Invalid token payload")
+
+    # Issue new access (and optionally rotate refresh)
+    new_access = create_access_token(sub=sub, user_type=user_type)
+
+    # (Optional but recommended) rotate refresh:
+    new_refresh = create_refresh_token(sub=sub, user_type=user_type)
+    response.set_cookie(
+        key="rb_refresh", value=new_refresh,
+        httponly=True, samesite="none", secure=True
+    )
+
+    return TokenResponse(access_token=new_access, user_type=user_type)
