@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.54% </span>
+                <span class="strong">63.63% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/33</span>
+                <span class='fraction'>21/33</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">94.73% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/15</span>
+                <span class='fraction'>18/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/4</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.54% </span>
+                <span class="strong">63.63% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/33</span>
+                <span class='fraction'>21/33</span>
             </div>
         
             
@@ -106,24 +106,16 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -131,17 +123,25 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-yes">8x</span></td><td class="text"><pre class="prettyprint lang-js">import { useEffect, useMemo, useState } from "react";
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span></td><td class="text"><pre class="prettyprint lang-js">import { useEffect, useMemo, useState } from "react";
 import AuthContext from "./auth-context";
 import { login as apiLogin, register as apiRegister, authLogout } from "../services/api";
 &nbsp;
@@ -152,7 +152,7 @@ export default function AuthProvider({ children }) {
 &nbsp;
   useEffect(() =&gt; { token ? localStorage.setItem("rb_token", token) : localStorage.removeItem("rb_token"); }, [token]);
   useEffect(() =&gt; { userType ? localStorage.setItem("rb_user_type", userType) : localStorage.removeItem("rb_user_type"); }, [userType]);
-  useEffect(() =&gt; { <span class="branch-0 cbranch-no" title="branch not covered" >email ? localStorage.setItem("rb_email", email) : l</span>ocalStorage.removeItem("rb_email"); }, [email]);
+  useEffect(() =&gt; { email ? localStorage.setItem("rb_email", email) : localStorage.removeItem("rb_email"); }, [email]);
 &nbsp;
   const login = <span class="fstat-no" title="function not covered" >async ({ email, password, user_type }) =&gt; {</span>
 <span class="cstat-no" title="statement not covered" >    const data = await apiLogin({ email, password, user_type });</span>
@@ -170,10 +170,10 @@ export default function AuthProvider({ children }) {
 <span class="cstat-no" title="statement not covered" >    return data;</span>
 <span class="cstat-no" title="statement not covered" >  };</span>
 &nbsp;
-  const logout = <span class="fstat-no" title="function not covered" >async () =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >    try { await authLogout(); } catch { /* ignore */ }</span>
-<span class="cstat-no" title="statement not covered" >    setToken(""); setUserType(""); setEmail("");</span>
-<span class="cstat-no" title="statement not covered" >  };</span>
+  const logout = async () =&gt; {
+    try { await authLogout(); <span class="branch-0 cbranch-no" title="branch not covered" >} catch { /* ignore */ }</span>
+    setToken(""); setUserType(""); setEmail("");
+  };
 &nbsp;
   const value = useMemo(() =&gt; ({
     token, userType, email, login, register, logout, isAuthed: Boolean(token),
@@ -187,7 +187,7 @@ export default function AuthProvider({ children }) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-11T16:24:34.754Z
+                at 2025-08-11T16:39:51.316Z
             </div>
         <script src="../../prettify.js"></script>
         <script>
