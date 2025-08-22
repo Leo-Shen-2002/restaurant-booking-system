@@ -17,10 +17,10 @@ test("search navigates to availability with query params", async () => {
   const dateInput = screen.getByLabelText(/date/i) || screen.getByDisplayValue("");
   const partyInput = screen.getByDisplayValue("2");
 
-  fireEvent.change(dateInput, { target: { value: "2025-08-12" } });
+  fireEvent.change(dateInput, { target: { value: "2025-08-30" } });
   fireEvent.change(partyInput, { target: { value: "4" } });
 
   fireEvent.click(screen.getByRole("button", { name: /search availability/i }));
 
-  expect(mockNavigate).toHaveBeenCalledWith("/availability?date=2025-08-12&partySize=4");
+  expect(mockNavigate).toHaveBeenCalledWith("/availability?date=2025-08-30&partySize=4");
 });

@@ -30,16 +30,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">52.94% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/17</span>
+                <span class='fraction'>8/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.5% </span>
+                <span class="strong">57.14% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/8</span>
+                <span class='fraction'>4/7</span>
             </div>
         
             
@@ -258,7 +258,9 @@
 <a name='L193'></a><a href='#L193'>193</a>
 <a name='L194'></a><a href='#L194'>194</a>
 <a name='L195'></a><a href='#L195'>195</a>
-<a name='L196'></a><a href='#L196'>196</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L196'></a><a href='#L196'>196</a>
+<a name='L197'></a><a href='#L197'>197</a>
+<a name='L198'></a><a href='#L198'>198</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -290,6 +292,7 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -300,10 +303,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
@@ -346,6 +347,7 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
@@ -356,10 +358,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-yes">56x</span>
+<span class="cline-any cline-yes">56x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
@@ -369,7 +374,6 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
@@ -485,20 +489,19 @@ export default function Home() {
     return `${yyyy}-${mm}-${dd}`;
   }, []);
 &nbsp;
-  const validate = () =&gt; {
-    const e = {};
-    if (!date) <span class="branch-0 cbranch-no" title="branch not covered" >e.date = "Please choose a date.";</span>
-    else if (date &lt; todayStr) <span class="branch-0 cbranch-no" title="branch not covered" >e.date = "Date can’t be in the past.";</span>
-    if (!partySize || partySize &lt; 1) <span class="branch-0 cbranch-no" title="branch not covered" >e.party = "Party size must be at least 1.";</span>
-    else if (partySize &gt; MAX_PARTY_SIZE) <span class="branch-0 cbranch-no" title="branch not covered" >e.party = `Maximum party size is ${MAX_PARTY_SIZE}.`;</span>
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
 &nbsp;
-  const handleSearch = () =&gt; {
-    if (!validate()) <span class="branch-0 cbranch-no" title="branch not covered" >return;</span>
-    navigate(`/availability?date=${date}&amp;partySize=${partySize}`);
-  };
+const handleSearch = (e) =&gt; {
+  e?.preventDefault();
+  const errs = {};
+  if (!date) <span class="branch-0 cbranch-no" title="branch not covered" >errs.date = "Please choose a date";</span>
+  else if (date &lt; todayStr) <span class="branch-0 cbranch-no" title="branch not covered" >errs.date = "Date can’t be in the past.";</span>
+  if (partySize &lt; 1) <span class="branch-0 cbranch-no" title="branch not covered" >errs.party = "Party size must be at least 1";</span>
+  else if (partySize &gt; MAX_PARTY_SIZE) <span class="branch-0 cbranch-no" title="branch not covered" >errs.party = `Maximum party size is ${MAX_PARTY_SIZE}.`;</span>
+  setErrors(errs);
+  if (Object.keys(errs).length) <span class="branch-0 cbranch-no" title="branch not covered" >return;</span>
+&nbsp;
+  navigate(`/availability?date=${date}&amp;partySize=${partySize}`);
+};
 &nbsp;
   return (
     &lt;div className="min-h-screen bg-gradient-to-b from-white to-slate-50"&gt;
@@ -527,7 +530,7 @@ export default function Home() {
           &lt;/p&gt;
 &nbsp;
           {/* Search card */}
-          &lt;div className="mt-6 p-4 md:p-5 bg-white rounded-2xl shadow-sm border"&gt;
+          &lt;form data-testid="search-form" onSubmit={handleSearch} className="mt-6 p-4 md:p-5 bg-white rounded-2xl shadow-sm border"&gt;
             &lt;h2 className="font-semibold mb-3"&gt;Find a table&lt;/h2&gt;
             &lt;div className="grid grid-cols-1 md:grid-cols-3 gap-3"&gt;
               &lt;div&gt;
@@ -541,6 +544,7 @@ export default function Home() {
                 /&gt;
                 {errors.<span class="branch-0 cbranch-no" title="branch not covered" >date &amp;&amp; &lt;p className="text-xs text-red-600 mt-1"&gt;{errors.date}&lt;/p&gt;}</span>
               &lt;/div&gt;
+&nbsp;
               &lt;div&gt;
                 &lt;label htmlFor="search-party" className="text-sm text-slate-600"&gt;Party size&lt;/label&gt;
                 &lt;select
@@ -549,26 +553,28 @@ export default function Home() {
                   onChange={(e) =&gt; setPartySize(Number(e.target.value))}
                   className="w-full mt-1 rounded-lg border p-2"
                 &gt;
-                  {Array.from({ length: MAX_PARTY_SIZE }, (_, i) =&gt; i + 1).map(n =&gt; (
-                    &lt;option key={n} value={n}&gt;{n}&lt;/option&gt;
+                  {Array.from({ length: MAX_PARTY_SIZE }, (_, i) =&gt; i + 1).map((n) =&gt; (
+                    &lt;option key={n} value={n}&gt;
+                      {n}
+                    &lt;/option&gt;
                   ))}
                 &lt;/select&gt;
                 {errors.<span class="branch-0 cbranch-no" title="branch not covered" >party &amp;&amp; &lt;p className="text-xs text-red-600 mt-1"&gt;{errors.party}&lt;/p&gt;}</span>
               &lt;/div&gt;
+&nbsp;
               &lt;div className="flex items-end"&gt;
                 &lt;button
-                  onClick={handleSearch}
+                  type="submit"
                   className="w-full rounded-lg bg-blue-600 text-white p-2.5 hover:bg-blue-700 transition"
                 &gt;
                   Search availability
                 &lt;/button&gt;
               &lt;/div&gt;
             &lt;/div&gt;
-&nbsp;
             &lt;p className="text-xs text-slate-500 mt-3"&gt;
               Need something special? You can add requests during booking.
             &lt;/p&gt;
-          &lt;/div&gt;
+          &lt;/form&gt;
         &lt;/div&gt;
 &nbsp;
         {/* Info card */}
@@ -655,7 +661,7 @@ export default function Home() {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2025-08-11T16:39:51.316Z
+                at 2025-08-22T14:24:17.181Z
             </div>
         <script src="../../prettify.js"></script>
         <script>

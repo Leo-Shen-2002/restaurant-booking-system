@@ -30,20 +30,19 @@ export default function Home() {
     return `${yyyy}-${mm}-${dd}`;
   }, []);
 
-  const validate = () => {
-    const e = {};
-    if (!date) e.date = "Please choose a date.";
-    else if (date < todayStr) e.date = "Date can’t be in the past.";
-    if (!partySize || partySize < 1) e.party = "Party size must be at least 1.";
-    else if (partySize > MAX_PARTY_SIZE) e.party = `Maximum party size is ${MAX_PARTY_SIZE}.`;
-    setErrors(e);
-    return Object.keys(e).length === 0;
-  };
 
-  const handleSearch = () => {
-    if (!validate()) return;
-    navigate(`/availability?date=${date}&partySize=${partySize}`);
-  };
+const handleSearch = (e) => {
+  e?.preventDefault();
+  const errs = {};
+  if (!date) errs.date = "Please choose a date";
+  else if (date < todayStr) errs.date = "Date can’t be in the past.";
+  if (partySize < 1) errs.party = "Party size must be at least 1";
+  else if (partySize > MAX_PARTY_SIZE) errs.party = `Maximum party size is ${MAX_PARTY_SIZE}.`;
+  setErrors(errs);
+  if (Object.keys(errs).length) return;
+
+  navigate(`/availability?date=${date}&partySize=${partySize}`);
+};
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-slate-50">
@@ -72,7 +71,7 @@ export default function Home() {
           </p>
 
           {/* Search card */}
-          <div className="mt-6 p-4 md:p-5 bg-white rounded-2xl shadow-sm border">
+          <form data-testid="search-form" onSubmit={handleSearch} className="mt-6 p-4 md:p-5 bg-white rounded-2xl shadow-sm border">
             <h2 className="font-semibold mb-3">Find a table</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               <div>
@@ -86,6 +85,7 @@ export default function Home() {
                 />
                 {errors.date && <p className="text-xs text-red-600 mt-1">{errors.date}</p>}
               </div>
+
               <div>
                 <label htmlFor="search-party" className="text-sm text-slate-600">Party size</label>
                 <select
@@ -94,26 +94,28 @@ export default function Home() {
                   onChange={(e) => setPartySize(Number(e.target.value))}
                   className="w-full mt-1 rounded-lg border p-2"
                 >
-                  {Array.from({ length: MAX_PARTY_SIZE }, (_, i) => i + 1).map(n => (
-                    <option key={n} value={n}>{n}</option>
+                  {Array.from({ length: MAX_PARTY_SIZE }, (_, i) => i + 1).map((n) => (
+                    <option key={n} value={n}>
+                      {n}
+                    </option>
                   ))}
                 </select>
                 {errors.party && <p className="text-xs text-red-600 mt-1">{errors.party}</p>}
               </div>
+
               <div className="flex items-end">
                 <button
-                  onClick={handleSearch}
+                  type="submit"
                   className="w-full rounded-lg bg-blue-600 text-white p-2.5 hover:bg-blue-700 transition"
                 >
                   Search availability
                 </button>
               </div>
             </div>
-
             <p className="text-xs text-slate-500 mt-3">
               Need something special? You can add requests during booking.
             </p>
-          </div>
+          </form>
         </div>
 
         {/* Info card */}
