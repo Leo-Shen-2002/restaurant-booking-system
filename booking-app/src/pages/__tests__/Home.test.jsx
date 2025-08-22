@@ -12,15 +12,26 @@ vi.mock("react-router-dom", async (orig) => {
   };
 });
 
+function fmt(d) {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 test("search navigates to availability with query params", async () => {
   renderWithProviders(<Home />);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const dateStr = fmt(tomorrow);
   const dateInput = screen.getByLabelText(/date/i) || screen.getByDisplayValue("");
   const partyInput = screen.getByDisplayValue("2");
 
-  fireEvent.change(dateInput, { target: { value: "2025-08-30" } });
+
+  fireEvent.change(dateInput, { target: { value: dateStr } });
   fireEvent.change(partyInput, { target: { value: "4" } });
 
   fireEvent.click(screen.getByRole("button", { name: /search availability/i }));
 
-  expect(mockNavigate).toHaveBeenCalledWith("/availability?date=2025-08-30&partySize=4");
+  expect(mockNavigate).toHaveBeenCalledWith(`/availability?date=${dateStr}&partySize=4`);
 });
